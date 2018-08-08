@@ -1920,14 +1920,17 @@ DtCompileTpm2 (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoTpm2a,
         &Subtable);
-    if (ACPI_FAILURE (Status))
+
+    if (ACPI_SUCCESS (Status))
     {
-        return (Status);
+        ParentTable = DtPeekSubtable ();
+        DtInsertSubtable (ParentTable, Subtable);
     }
 
-    ParentTable = DtPeekSubtable ();
-    DtInsertSubtable (ParentTable, Subtable);
-
+    if (Status == AE_END_OF_TABLE)
+    {
+        Status = AE_OK;
+    }
 
     /* Subtable type depends on the StartMethod */
 
